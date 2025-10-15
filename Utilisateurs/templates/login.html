@@ -1,0 +1,141 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion</title>
+  <style>
+    /* ====== STYLE GLOBAL ====== */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #6b73ff, #000dff);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    .login-container {
+      background: #fff;
+      padding: 50px 40px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+      width: 850px;
+      max-width: 95%;
+    }
+
+    .login-container:hover {
+      transform: translateY(-5px);
+    }
+
+    /* ====== Illustration ====== */
+    .login-container .illustration img {
+      width: 220px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ====== Formulaire ====== */
+    .login-form {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .login-form h2 {
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .login-form input {
+      padding: 12px;
+      margin-bottom: 18px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border 0.3s;
+    }
+
+    .login-form input:focus {
+      border-color: #6b73ff;
+      outline: none;
+      box-shadow: 0 0 8px rgba(107, 115, 255, 0.2);
+    }
+
+    .login-form button {
+      padding: 12px;
+      background: linear-gradient(135deg, #4CAF50, #2e8b57);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .login-form button:hover {
+      background: linear-gradient(135deg, #45a049, #256d4f);
+      transform: scale(1.03);
+    }
+
+    /* ====== Messages d'erreur ====== */
+    .error {
+      color: red;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    /* ====== Lien inscription ====== */
+    .signup-link {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+
+    .signup-link a {
+      color: #6b73ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="illustration">
+      <img src="{% static 'illustration.png' %}" alt="Illustration">
+    </div>
+    <form method="POST" class="login-form">
+      {% csrf_token %}
+      <h2>Connexion</h2>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="error">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <input type="text" name="username" placeholder="Nom utilisateur" required>
+      <input type="password" name="password" placeholder="Mot de passe" required>
+      <button type="submit">SE CONNECTER</button>
+
+      <div class="signup-link">
+        <p>Pas encore de compte ? <a href="{% url 'creation' %}">Créer un compte</a></p>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

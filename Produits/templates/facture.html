@@ -1,0 +1,209 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Facture de Pharmacie</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 20px;
+        color: #333;
+        background-color: #f9f9f9;
+    }
+
+    .invoice-container {
+        max-width: 800px;
+        margin: auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 15px;
+    }
+
+    .logo img {
+        width: 100px;
+    }
+
+    .company {
+        color: #ff8800;
+        font-weight: bold;
+        font-size: 22px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+        color: #555;
+        margin-top: 5px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #6c0dad;
+        margin: 25px 0;
+        font-size: 26px;
+    }
+
+    .invoice-info {
+        margin: 20px 0;
+        line-height: 1.5;
+    }
+
+    .invoice-info strong {
+        color: #0073e6;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 12px 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        color: #ff8800;
+        font-weight: bold;
+    }
+
+    tbody tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    .total {
+        text-align: right;
+        font-size: 20px;
+        font-weight: bold;
+        color: #6c0dad;
+        margin-top: 15px;
+    }
+
+    .note {
+        margin-top: 25px;
+        font-size: 14px;
+        color: #0044cc;
+        text-align: center;
+    }
+
+    .print-btn {
+        display: block;
+        width: 200px;
+        margin: 30px auto 0;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #28a745;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .print-btn:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+
+    @media print {
+        .print-btn {
+            display: none;
+        }
+        body {
+            background: #fff;
+            margin: 0;
+        }
+        .invoice-container {
+            box-shadow: none;
+            border-radius: 0;
+        }
+    }
+
+    .btn-back {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    transition: background 0.2s;
+}
+</style>
+</head>
+<body>
+
+<div class="invoice-container">
+    <div class="header">
+        <div class="logo">
+            <img src="{% static 'pharm.png' %}" alt="Logo Pharmacie">
+        </div>
+        <div>
+            <div class="company">PHARMACIE GREG</div>
+            <div class="subtitle">
+                FIANARANTSOA <br>
+                Soatsihadino, Fianarantsoa <br>
+                +261 34 80 917 57
+            </div>
+        </div>
+    </div>
+
+    <h1>Facture de Pharmacie</h1>
+
+    <div class="invoice-info">
+        <p>
+          <strong>Date & Heure :</strong> {{ date_facture|date:"d/m/Y" }} à {{ heure_vente|time:"H:i:s" }}
+          <br>
+            <strong>Client :</strong> {{ client.name }} <br>
+            <strong>N° de facture :</strong> {{ facture_id }}
+        </p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Produit acheté</th>
+                <th>Qté</th>
+                <th>Prix Unitaire</th>
+                <th>Montant total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ produit.name }}</td>
+                <td>{{ quantite }}</td>
+                <td>{{ prix_unitaire }} FCFA</td>
+                <td>{{ total_amount }} FCFA</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="total">Total : {{ total_amount }} FCFA</p>
+
+    <p class="note">
+        Les produits vendus ne sont ni échangés ni remboursés.<br>
+        Pour tout problème, voir le vendeur.
+    </p>
+
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimer la facture</button>
+    <a href="{% url 'ajoutvente' produit.id %}" class="btn-back">
+      ⬅ Revenir
+  </a>
+</div>
+
+</body>
+</html>

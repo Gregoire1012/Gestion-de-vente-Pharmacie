@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <meta charset="UTF-8">
+    <title>Ajout Ventes</title>
+
+<style>
+  /* 🔇 Masque les erreurs du formulaire Django */
+  .errorlist, 
+  .error {
+    display: none !important;
+  }
+</style>
+  
+
+<div class="vente-container">
+  <h1>Vente du produit : <span class="product-name">{{ produit.name }}</span></h1>
+
+  <p class="info-text">
+      <span style="color: #007bff;">Veuillez</span><br>
+      <small style="color: grey;">Tous les champs sont obligatoires</small>
+  </p>
+
+  <a href="{% url 'product_detail' produit.id %}" class="btn-back">
+      ⬅ Revenir
+  </a>
+
+  <a href="{% url 'liste_ventes' %}" class="btn-back">
+    Voir les ventes
+  </a>
+    
+
+
+  <form method="post" action="{% url 'ajoutvente' produit.id %}" class="vente-form">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="{{ form.customer.id_for_label }}">{{ form.customer.label }} : <span class="required"></span></label>
+        {{ form.customer }}
+        {% if form.customer.errors %}
+            <p class="error">{{ form.customer.errors }}</p>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.quantite.id_for_label }}">{{ form.quantite.label }} : <span class="required"></span></label>
+        {{ form.quantite }}
+        {% if form.quantite.errors %}
+            <p class="error">{{ form.quantite.errors }}</p>
+        {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.date_vente.id_for_label }}">{{ form.date_vente.label }} :</label>
+      {{ form.date_vente }}
+      {% if form.date_vente.errors %}
+          <p class="error">{{ form.date_vente.errors }}</p>
+      {% endif %}
+    </div>
+    
+  
+      
+    <button type="submit" class="btn-submit">
+        ✅ EFFECTUER LA VENTE
+    </button>
+
+    {% if message %}
+        <p class="message">{{ message }}</p>
+    {% endif %}
+</form>
+
+</div>
+
+
+<style>
+.vente-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    background-color: #fff;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.product-name {
+    color: #007bff;
+}
+
+.info-text {
+    margin-bottom: 15px;
+}
+
+.btn-back {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    transition: background 0.2s;
+}
+
+.btn-back:hover {
+    background-color: #0056b3;
+}
+
+.vente-form .form-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.vente-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.vente-form input, .vente-form select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.required {
+    color: red;
+}
+
+.btn-submit {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 6px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.btn-submit:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.message {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #e74c3c;
+}
+</style>
+</html>

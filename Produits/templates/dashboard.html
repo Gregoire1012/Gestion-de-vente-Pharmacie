@@ -1,0 +1,184 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de Bord Professionnel</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgba(21, 30, 47, 1);
+            margin: 0;
+            padding: 0;
+        }
+        .dashboard-container {
+            max-width: 1300px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+        .chart-section {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .chart-box {
+            flex: 1;
+            min-width: 500px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+        .chart-box h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #444;
+        }
+        canvas {
+            width: 100% !important;
+            height: 350px !important;
+        }
+        .btn-back {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+        .btn-back:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <h1>📊 Statistiques de la Pharmacie</h1>
+    
+    <div class="chart-section">
+        <!-- Graphique à Barres -->
+        <div class="chart-box">
+            <h2>Ventes Mensuelles 2025 (Graphique à Barres)</h2>
+            <canvas id="salesBarChart"></canvas>
+        </div>
+
+        <!-- Diagramme Circulaire -->
+        <div class="chart-box">
+            <h2>Répartition des Ventes par Produit (%)</h2>
+            <canvas id="productPieChart"></canvas>
+        </div>
+    </div>
+
+    <a href="{% url 'acc' %}" class="btn-back">⬅ Revenir</a>
+</div>
+
+<script>
+    // --- Graphique à Barres dynamique ---
+    const bar_labels = [
+        "Janvier","Février","Mars","Avril","Mai","Juin",
+        "Juillet","Août","Septembre","Octobre","Novembre","Décembre"
+    ];
+    const bar_data = {{ ventes_mensuelles|safe }};
+
+    new Chart(document.getElementById('salesBarChart'), {
+        type: 'bar',
+        data: {
+            labels: bar_labels,
+            datasets: [{
+                label: 'Montant Total des Ventes (Ar)',
+                data: bar_data,
+                backgroundColor: 'rgba(54,162,235,0.7)',
+                borderColor: 'rgba(54,162,235,1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Ventes mensuelles (Ar)',
+                    font: { size: 16 }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString() + " Ar";
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // --- Diagramme Circulaire dynamique ---
+    const pie_labels = {{ pie_labels|safe }};
+    const pie_data = {{ pie_data|safe }};
+
+    new Chart(document.getElementById('productPieChart'), {
+        type: 'pie',
+        data: {
+            labels: pie_labels,
+            datasets: [{
+                data: pie_data,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)',
+                    'rgba(255, 159, 64, 0.7)'
+                ],
+                borderColor: '#fff',
+                borderWidth: 2,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            let value = context.raw;
+                            let percentage = ((value / total) * 100).toFixed(1) + "%";
+                            return context.label + ": " + value.toLocaleString() + " Ar (" + percentage + ")";
+                        }
+                    }
+                },
+                legend: {
+                    position: 'bottom',
+                    labels: { font: { size: 13 } }
+                },
+                title: {
+                    display: true,
+                    text: 'Répartition des ventes par produit (%)',
+                    font: { size: 16 }
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

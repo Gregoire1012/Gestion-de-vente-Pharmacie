@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>✉️ Envoyer un message</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            background-color: rgba(21, 30, 47, 1);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .message-container {
+            max-width: 700px;
+            margin: 80px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            padding: 40px 50px;
+            position: relative;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .message-header h3 {
+            font-weight: 700;
+            color: #333;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 15px;
+            border: 1px solid #ddd;
+            box-shadow: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 6px rgba(0,123,255,0.2);
+        }
+
+        textarea.form-control {
+            resize: none;
+        }
+
+        .btn-send {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            color: white;
+            font-weight: 600;
+            border-radius: 30px;
+            padding: 10px 25px;
+            transition: 0.3s;
+        }
+
+        .btn-send:hover {
+            background: linear-gradient(135deg, #20c997, #28a745);
+            transform: scale(1.03);
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .top-icon {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        
+    </style>
+</head>
+<body>
+
+<div class="message-container">
+    <div class="top-icon">
+        <i class="fa-solid fa-paper-plane fa-lg"></i>
+    </div>
+
+    <div class="message-header">
+        <h3>✉️ Envoyer un message</h3>
+        <a href="{% url 'inbox' %}" class="back-link"><i class="fa fa-arrow-left"></i> Retour à la boîte</a>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+    
+        <div class="form-group">
+            <label class="form-label">👤 Destinataire :</label>
+            <input type="text" name="recipient" class="form-control" placeholder="Nom d'utilisateur du destinataire" required>
+        </div>
+        
+    
+        <div class="form-group">
+            <label class="form-label">📌 Sujet :</label>
+            <input type="text" name="subject" class="form-control" placeholder="Saisir le sujet du message" required>
+        </div>
+    
+        <div class="form-group">
+            <label class="form-label">📝 Message :</label>
+            <textarea name="body" class="form-control" rows="6" placeholder="Écris ton message ici..." required></textarea>
+        </div>
+    
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-paper-plane"></i> Envoyer le message
+            </button>
+        </div>
+    </form>
+    
+</div>
+
+</body>
+</html>

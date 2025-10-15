@@ -1,0 +1,311 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Resultat de recherche</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<style>
+
+  h2 {
+    color: white;
+    }
+  
+  h3 {
+    color: red;
+  }
+
+  .button {
+      padding: 5px 15px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+      color: white;
+    }
+  
+    .red {
+      background-color: red;
+    }
+  
+    .orange {
+      background-color: orange;
+    }
+    .green {
+      background-color: green;
+    }
+  
+  .gridView {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+    
+  }
+  
+  .product-card {
+    border: none;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+  }
+  
+  .product-card .product-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .product-info h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+  }
+
+  .products-area-wrapper {
+    margin-bottom: 25px;
+}
+
+  
+  .product-info p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .gridView .products-row {
+      margin: 8px;
+      width: calc(85% );
+      background-color: var(--app-content-secondary-color);
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      position: relative;
+  }
+  
+  
+  /* ✅ Container des actions */
+  .product-cell.action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* espace entre boutons */
+  }
+  
+  /* ✅ Style général des boutons icônes */
+  .btn-action {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 16px;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  
+  /* 👁 Voir (Bleu) */
+  .btn-detail {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+  }
+  
+  
+  /* ✏ Modifier (Orange) */
+  .btn-edit {
+    background: linear-gradient(135deg, #f39c12, #d35400);
+  }
+  
+  
+  /* 🗑 Supprimer (Rouge) */
+  .btn-delete {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+  }
+  
+  .btn-secondary {
+      
+      background-color: #c0392b;
+      border: none;
+      border-radius: 6px;
+      padding: 6px;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: red;
+    }
+  
+  </style>
+
+<body>
+
+  {% include "zone_gauche.html" %}
+
+  <div class="app-content">
+    {% include "header.html" %}
+    {% include "header2.html" %}
+
+
+    {% if query %}
+ 
+      <h2>Résultats de recherche : <b>{{ query }}</b></h2>
+    {% endif %}
+
+    {% if donnees %}
+      <!-- ✅ Vue tableau -->
+      <div class="products-area-wrapper tableView">
+        <div class="products-header">
+          <div class="product-cell image">Nom Produit</div>
+          <div class="product-cell category">Catégorie</div>
+          <div class="product-cell status-cell">Status & Quantité</div>
+          <div class="product-cell sales">Prix</div>
+          <div class="product-cell stock">Description</div>
+          <div class="product-cell price">Date Ajout</div>
+          <div class="product-cell price">Date Expiration</div>
+          <div class="product-cell action">Action</div>
+        </div>
+
+        {% for n in donnees %}
+        <div class="products-row">
+          <div class="product-cell image">
+            {% if n.image %}
+              <img src="{{ n.image.url }}" alt="product">
+            {% else %}
+              <img src="https://via.placeholder.com/150x100" alt="default">
+            {% endif %}
+            <span>{{ n.name }}</span>
+          </div>
+          <div class="product-cell category">{{ n.category }}</div>
+          <div class="product-cell status-cell">
+            <span class="status">
+              <button class="button {{ n.statut_quantite }}"></button>
+              {{ n.statut_quantite }} ({{ n.quantite }})
+            </span>
+          </div>
+          <div class="product-cell sales">{{ n.price }} Ar</div>
+          <div class="product-cell stock">{{ n.description }}</div>
+          <div class="product-cell price">{{ n.date_ajout }}</div>
+          <div class="product-cell price">{{ n.date_expiration }}</div>
+
+          <!-- ✅ Actions -->
+          <div class="product-cell action">
+            <a href="{% url 'product_detail' n.id %}" class="btn-action btn-detail" title="Voir">
+              <i class="fa fa-eye"></i>
+            </a>
+            <a href="{% url 'edit_product' n.id %}" class="btn-action btn-edit" title="Modifier">
+              <i class="fa fa-pencil"></i>
+            </a>
+            <a href="{% url 'delete_product' n.id %}" class="btn-action btn-delete" title="Supprimer"
+               onclick="return confirm('Voulez-vous vraiment supprimer ce produit ?');">
+              <i class="fa fa-trash"></i>
+            </a>
+          </div>
+        </div>
+        
+        {% endfor %}
+        
+      </div>
+      <div>
+        <a href="http://127.0.0.1:8000" class="btn btn-secondary btn-block">⬅ Retour</a>
+      </div>
+
+      <!-- ✅ Vue grille -->
+      <div id="grid-view" class="products-area-wrapper gridView" style="display:none;">
+        {% for n in object_list %}
+        <div class="product-card">
+          <div class="product-image">
+            {% if n.image %}
+            <img src="{{n.image.url}}" alt="{{n.name}}">
+            {% else %}
+            <img src="https://via.placeholder.com/250x200" alt="default">
+            {% endif %}
+          </div>
+      
+          <!-- Infos -->
+          <div class="product-info">
+            <h3>{{n.name}}</h3>
+            <p class="category"><i class="fa fa-tags"></i> {{n.category}}</p>
+            <p class="status">
+              <i class="fa fa-cubes"></i> 
+              <button class="button {{ n.statut_quantite }}"></button>
+              {{ n.statut_quantite }} ({{ n.quantite }})
+            </p>
+            <p class="price"><i class="fa fa-money"></i> <b>{{n.price}} Ar</b></p>
+            <p class="desc"><i class="fa fa-info-circle"></i> {{n.description|truncatechars:60}}</p>
+            <p class="dates"><i class="fa fa-calendar-plus-o"></i> {{n.date_ajout}} | <i class="fa fa-calendar-times-o"></i> {{n.date_expiration}}</p>
+          </div>
+          <div class="actions">
+            <a href="{% url 'product_detail' n.id %}" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i></a>
+            <a href="{% url 'edit_product' n.id %}" class="btn btn-sm btn-warning"><i class="fa fa-pencil"></i></a>
+            <a href="{% url 'delete_product' n.id %}" class="btn btn-sm btn-danger"
+               onclick="return confirm('Voulez-vous vraiment supprimer ce produit ?');">
+               <i class="fa fa-trash"></i>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+     
+    {% else %}
+
+    
+    <div class="products-area-wrapper tableView">
+      <div class="products-header">
+        <div class="product-cell image">
+          Nom Produit
+          <button class="sort-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+          </button>
+        </div>
+        <div class="product-cell category">Categories<button class="sort-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+          </button></div>
+        <div class="product-cell status-cell">Status & Quantite<button class="sort-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+          </button></div>
+        <div class="product-cell sales">Prix<button class="sort-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+          </button></div>
+        <div class="product-cell stock">Description<button class="sort-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+          </button></div>
+        <div class="product-cell price">Date Ajout<button class="sort-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+          </button></div>
+        <div class="product-cell price">Date Expiration<button class="sort-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+          </button></div>
+          <div class="product-cell action">Action<button class="sort-button">
+          </button></div>
+      </div>
+    </div>
+      <h3>Aucun résultat trouvé{% if query %} pour "{{ query }}"{% endif %}</h3>
+
+      <div>
+        <a href="http://127.0.0.1:8000" class="btn btn-secondary btn-block">⬅ Retour</a>
+      </div>
+    {% endif %}
+
+  </div>
+
+  
+</body>
+</html>

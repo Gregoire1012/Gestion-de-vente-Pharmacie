@@ -1,0 +1,240 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Détails du produit </title>
+  <div class="product-card">
+
+    {% if product.quantite == 0 %}
+      <div class="status danger">
+        <i class="bi bi-x-circle-fill"></i> Produit {{ product.name }} non disponible
+      </div>
+      <form action="{% url 'ajoutvente' product.id %}" method="post">
+        {% csrf_token %}
+        <button class="btn disabled" disabled><i class="bi bi-ban"></i> Indisponible</button>
+      </form>
+  
+    {% elif product.quantite <= 10 %}
+      <div class="status warning">
+        <i class="bi bi-exclamation-triangle-fill"></i> Stock bas : {{ product.quantite }} restant(s)
+      </div>
+      <form action="{% url 'ajoutvente' product.id %}" method="post">
+        {% csrf_token %}
+        <button class="btn warning"><i class="bi bi-cart-plus-fill"></i> Vendre {{ product.name }}</button>
+      </form>
+  
+    {% else %}
+      <div class="status success">
+        <i class="bi bi-check-circle-fill"></i> Disponible : {{ product.quantite }} en stock
+      </div>
+      <form action="{% url 'ajoutvente' product.id %}" method="post">
+        {% csrf_token %}
+        <button class="btn success"><i class="bi bi-cart-check-fill"></i> Vendre {{ product.name }}</button>
+      </form>
+    {% endif %}
+  
+  </div>
+  
+  <style>
+  .product-card { max-width:500px; margin:30px auto; padding:20px; text-align:center; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1); background:#fff; }
+  .status { padding:10px; border-radius:6px; margin-bottom:15px; font-weight:bold; color:#fff; display:inline-block; }
+  .status.danger { background:#e74c3c; }
+  .status.warning { background:#f39c12; }
+  .status.success { background:#27ae60; }
+  .btn { padding:10px 20px; border:none; border-radius:6px; font-size:1em; cursor:pointer; margin-top:5px; }
+  .btn.success { background:#27ae60; color:#fff; }
+  .btn.warning { background:#f39c12; color:#fff; }
+  .btn.disabled { background:#7f8c8d; color:#fff; cursor:not-allowed; }
+  .btn:hover:not(.disabled) { opacity:0.85; }
+  </style>
+  
+
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    /* ------------------------------
+       RESET DE BASE
+    ------------------------------ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: rgba(21,30,47,1);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* ------------------------------
+       CONTAINER PRINCIPAL
+    ------------------------------ */
+    .container {
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 30px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    h1 {
+      font-size: 30px;
+      color: #2c3e50;
+      margin-bottom: 25px;
+      text-align: center;
+      font-weight: 700;
+      border-bottom: 2px solid #3498db;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+
+    /* ------------------------------
+       IMAGE PRODUIT
+    ------------------------------ */
+    .product-img {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .product-img img {
+      border-radius: 12px;
+      max-width: 300px;
+      height: auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .product-img img:hover {
+      transform: scale(1.05);
+    }
+
+    /* ------------------------------
+       DETAILS PRODUIT
+    ------------------------------ */
+    .details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px 40px;
+      padding: 20px;
+    }
+
+    .detail-card {
+      background: #f9fbfd;
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .detail-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .detail-card strong {
+      display: block;
+      font-size: 14px;
+      color: #3498db;
+      margin-bottom: 5px;
+    }
+
+    .detail-card span {
+      font-size: 16px;
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    /* ------------------------------
+       BOUTON RETOUR
+    ------------------------------ */
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 22px;
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: #fff;
+      font-weight: bold;
+      font-size: 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 30px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(52,152,219,0.4);
+    }
+
+    .btn-back:hover {
+      background: linear-gradient(135deg, #2980b9, #21618c);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(41,128,185,0.4);
+    }
+
+    .btn-back i {
+      margin-right: 8px;
+    }
+
+    /* ------------------------------
+       ANIMATIONS
+    ------------------------------ */
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Détails du produit : {{ product.name }}</h1>
+
+    <div class="product-img">
+      <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    </div>
+
+    <div class="details">
+      <div class="detail-card">
+        <strong>Nom :</strong>
+        <span>{{ product.name }}</span>
+      </div>
+      <div class="detail-card">
+        <strong>Catégorie :</strong>
+        <span>{{ product.category }}</span>
+      </div>
+      <div class="detail-card">
+        <strong>Quantité :</strong>
+        <span>{{ product.quantite }}</span>
+      </div>
+      <div class="detail-card">
+        <strong>Status :</strong>
+        <span>{{ product.statut_quantite }}</span>
+      </div>
+      <div class="detail-card">
+        <strong>Prix :</strong>
+        <span>{{ product.price }} Ar</span>
+      </div>
+      <div class="detail-card">
+        <strong>Description :</strong>
+        <span>{{ product.description }}</span>
+      </div>
+      <div class="detail-card">
+        <strong>Date d’ajout :</strong>
+        <span>{{ product.date_ajout }}</span>
+      </div>
+      <div class="detail-card">
+        <strong>Date d’expiration :</strong>
+        <span>{{ product.date_expiration }}</span>
+      </div>
+    </div>
+
+    <a href="{% url 'home' %}" class="btn-back">
+      <i class="fa fa-arrow-left"></i> Retour à la liste
+    </a>
+  </div>
+</body>
+</html>

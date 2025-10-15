@@ -1,0 +1,177 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Création de Compte</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ====== STYLE GLOBAL ====== */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #6b73ff, #000dff);
+    }
+
+    .register-container {
+      display: flex;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      overflow: hidden;
+      width: 850px;
+      max-width: 95%;
+      transition: transform 0.3s ease;
+      height: 550px;
+    }
+
+    .register-container:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Illustration */
+    .illustration {
+      flex: 1;
+      background: url("{% static 'creation.png' %}") no-repeat center center;
+      background-size: cover;
+    }
+
+    /* Formulaire */
+    .form-section {
+      flex: 1;
+      padding: 40px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .form-group {
+      display: flex;
+      align-items: center;
+      background: #f2f3f5;
+      border-radius: 8px;
+      padding: 12px 15px;
+      margin-bottom: 18px;
+      transition: box-shadow 0.3s;
+    }
+
+    .form-group i {
+      margin-right: 10px;
+      color: #666;
+    }
+
+    .form-group input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .form-group input:focus {
+      box-shadow: 0 0 8px rgba(107, 115, 255, 0.2);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #4CAF50, #2e8b57);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #45a049, #256d4f);
+      transform: scale(1.03);
+    }
+
+    .error {
+      color: red;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .already-account {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .already-account a {
+      color: #6b73ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .already-account a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-container">
+    <div class="illustration"></div>
+
+    <div class="form-section">
+      <h2>Création de Compte</h2>
+      <form method="POST" action="">
+        {% csrf_token %}
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="error">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <div class="form-group">
+          <i class="fa fa-user"></i>
+          <input type="text" name="username" placeholder="Nom d’utilisateur" required>
+        </div>
+
+        <div class="form-group">
+          <i class="fa fa-envelope"></i>
+          <input type="email" name="email" placeholder="Adresse e-mail" required>
+        </div>
+
+        <div class="form-group">
+          <i class="fa fa-lock"></i>
+          <input type="password" name="password1" placeholder="Mot de passe" required>
+        </div>
+
+        <div class="form-group">
+          <i class="fa fa-lock"></i>
+          <input type="password" name="password2" placeholder="Confirmation du mot de passe" required>
+        </div>
+
+        <button type="submit" class="btn-submit">Créer un compte</button>
+      </form>
+
+      <div class="already-account">
+        <p>J’ai déjà un compte ? <a href="{% url 'login' %}">Se connecter</a></p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
