@@ -3,9 +3,9 @@ pipeline {
 
     stages {
 
-        stage('Clone GitHub') {
+        stage('Clone') {
             steps {
-                git branch: 'main', url: 'https://github.com/Gregoire1012/Gestion-de-vente-Pharmacie.git'
+                git 'https://github.com/Gregoire1012/Gestion-de-vente-Pharmacie.git'
             }
         }
 
@@ -13,9 +13,8 @@ pipeline {
             steps {
                 sh '''
                 python3 -m venv venv
-                source venv/bin/activate
-                pip install --upgrade pip
-                pip install django
+                ./venv/bin/pip install --upgrade pip
+                ./venv/bin/pip install django
                 '''
             }
         }
@@ -23,8 +22,7 @@ pipeline {
         stage('Migrations') {
             steps {
                 sh '''
-                source venv/bin/activate
-                python manage.py migrate
+                ./venv/bin/python manage.py migrate
                 '''
             }
         }
@@ -32,15 +30,14 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
-                source venv/bin/activate
-                python manage.py check
+                ./venv/bin/python manage.py check
                 '''
             }
         }
 
-        stage('Run Server (Test Only)') {
+        stage('Done') {
             steps {
-                echo "Build OK - Ready for deploy"
+                echo "Build SUCCESS 🚀"
             }
         }
     }
