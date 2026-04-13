@@ -5,7 +5,7 @@ pipeline {
 
         stage('Clone') {
             steps {
-                git 'https://github.com/Gregoire1012/Gestion-de-vente-Pharmacie.git'
+                git branch: 'main', url: 'https://github.com/Gregoire1012/Gestion-de-vente-Pharmacie.git'
             }
         }
 
@@ -37,7 +37,7 @@ pipeline {
 
         stage('Done') {
             steps {
-                echo "Build SUCCESS 🚀"
+                echo "SUCCESS 🚀"
             }
         }
     }
